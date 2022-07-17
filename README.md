@@ -1,20 +1,16 @@
-# Starter code for Chess.js and Chessboard.js 
+# Basic chess engine 
 
-Integrates Chess.js and Chessboard.js into an HTML page.  
+Based on the example here of integrating Chess.js and Chessboard.js: https://github.com/0hq/starter_chess_engine 
 
-**Branch main:** Random vs Random.  
-**Branch player vs random:** Player vs Random.  
-
-Try it here:   
-https://0hq.github.io/starter_chess_engine/ 
+Backend is in Rust and compiles to WASM
 
 ---
 
 Instructions for use:
 
 - Download the repo.  
-- Open index.html in a browser.   
-- Live Server extension in VSCode reccomended.   
+- Go into the "engine" directory and run `wasm-pack build --target web` in the terminal to compile the Rust backend
+- Go back into the root directory and run `python3 -m http.server` or similar to serve the site
   
 ---
 
