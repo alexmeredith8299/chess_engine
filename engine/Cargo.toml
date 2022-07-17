@@ -1,15 +1,11 @@
 [package]
 name = "engine"
 version = "0.1.0"
-authors = ["Alex Meredith <alexm0802@gmail.com>"]
-description = "A chess engine"
-license = "GPL"
-repository = "https://github.com/alexmeredith8299/chess_engine"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-crate-type=["cdylib"]
+crate-type=['cdylib']
+
 
 [dependencies]
-wasm-bindgen="0.2"

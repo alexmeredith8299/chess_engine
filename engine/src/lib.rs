@@ -1,13 +1,13 @@
-use wasm_bindgen::prelude::*;
-
-//Make alert in JS callable from Rust
-#[wasm_bindgen]
-extern {
-    pub fn alert(s: &str);
+#[no_mangle]
+pub fn add(first: i32, second:i32) -> i32 {
+    first + second
+}
+#[no_mangle]
+pub fn subtract(first: i32, second:i32) -> i32 {
+    first - second
+}
+#[no_mangle]
+pub fn multiply(first: i32, second:i32) -> i32 {
+    first * second
 }
 
-//Make greet in Rust callable from JS
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    alert(&format!("Hello from Rust, {}!", name));
-}

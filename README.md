@@ -9,8 +9,9 @@ Backend is in Rust and compiles to WASM
 Instructions for use:
 
 - Download the repo.  
-- Go into the "engine" directory and run `wasm-pack build --target web` in the terminal to compile the Rust backend
-- Go back into the root directory and run `python3 -m http.server` or similar to serve the site
+- Go into the "engine" directory and run `cargo build --target wasm32-unknown-unknown --release` in the terminal to compile the Rust backend
+- Go into the "frontend" directory and run `mv ../engine/target/wasm32-unknown-unknown/release/engine.wasm assets` to move the compiled Rust backend into the assets folder
+- Run `python3 -m http.server` or similar to serve the site
   
 ---
 
