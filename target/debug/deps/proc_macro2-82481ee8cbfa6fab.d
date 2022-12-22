@@ -1,0 +1,11 @@
+/Users/alexmeredith/chess_engine/target/debug/deps/proc_macro2-82481ee8cbfa6fab.rmeta: /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/lib.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/marker.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/parse.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/rcvec.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/detection.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/fallback.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/wrapper.rs
+
+/Users/alexmeredith/chess_engine/target/debug/deps/proc_macro2-82481ee8cbfa6fab.d: /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/lib.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/marker.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/parse.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/rcvec.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/detection.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/fallback.rs /Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/wrapper.rs
+
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/lib.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/marker.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/parse.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/rcvec.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/detection.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/fallback.rs:
+/Users/alexmeredith/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.48/src/wrapper.rs:

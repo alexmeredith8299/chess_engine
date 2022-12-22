@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["bumpalo","cfg_if","chess_engine","console_error_panic_hook","js_sys","log","once_cell","proc_macro2","quote","syn","unicode_ident","wasm_bindgen","wasm_bindgen_backend","wasm_bindgen_macro","wasm_bindgen_macro_support","wasm_bindgen_shared"];
