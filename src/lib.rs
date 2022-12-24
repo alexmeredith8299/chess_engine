@@ -1,11 +1,11 @@
 mod utils;
-mod chess_util;
+mod board;
 
 use wasm_bindgen::prelude::*;
 use std::fmt;
 use js_sys::Array;
-use crate::chess_util::Side;
-use crate::chess_util::Outcome;
+use crate::utils::chess_util::Side;
+use crate::utils::chess_util::Outcome;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -29,23 +29,23 @@ pub struct ChessGame {
 #[wasm_bindgen]
 impl ChessGame {
     pub fn make_move(&mut self, fen: &str) -> String {
-        let fen = chess_util::get_engine_move(fen, self.engine_side);
+        let fen = utils::chess_util::get_engine_move(fen, self.engine_side);
         self.current_position = fen.clone();
         return fen.clone();
     }
 
     pub fn check_if_legal(&self, old_fen: &str, source: &str, target: &str, piece: &str) -> bool {
-        return chess_util::check_if_legal(old_fen, source, target, piece, self.player_side); 
+        return utils::chess_util::check_if_legal(old_fen, source, target, piece, self.player_side); 
     }
 
     pub fn update(&mut self, old_fen: &str, source: &str, target: &str, piece: &str) -> String {
-        let fen = chess_util::get_fen_for_move(old_fen, source, target, piece);
+        let fen = utils::chess_util::get_fen_for_move(old_fen, source, target, piece);
         self.current_position = fen.clone();
         return fen.clone();
     }
 
     pub fn get_legal_moves_for_highlighting(&self, fen: &str, source: &str, piece: &str) -> js_sys::Array {
-        let rust_array = chess_util::get_legal_moves(fen, source, piece, self.player_side);
+        let rust_array = utils::chess_util::get_legal_moves(fen, source, piece, self.player_side);
         return rust_array.into_iter().map(JsValue::from).collect() // Works as expected! 
     }
 

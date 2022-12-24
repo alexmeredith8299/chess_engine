@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
 use std::convert::TryInto;
+use super::super::board::bitboard::Bitboard;
 
 #[wasm_bindgen]
 #[repr(u8)]
@@ -54,6 +55,7 @@ fn parse_piece(source: &str, piece: &str) -> Piece {
         'R' => piece_type = PieceType::Rook,
         'Q' => piece_type = PieceType::Queen,
         'K' => piece_type = PieceType::King,
+        'N' => piece_type = PieceType::Knight,
         _ => panic!("Couldn't parse piece type"),
     }
     let (file, rank) = parse_square(source);
@@ -69,6 +71,17 @@ fn parse_square(source: &str) -> (u8, u8) {
     let rank_index = ranks.iter().position(|&r| r == rank).unwrap();
 
     return (file_index.try_into().unwrap(), rank_index.try_into().unwrap());
+}
+
+fn get_all_moves_knight(enemies: Bitboard, allies: Bitboard) -> Vec<String> {
+    return Vec::from(["e1".to_string(), "e5".to_string()])
+}
+
+fn get_all_moves(piece: Piece, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
+    match piece.piece_type {
+        PieceType::Knight => return get_all_moves_knight(enemies, allies),
+        _ => return Vec::from(["e4".to_string(), "e5".to_string()]),
+    }
 }
 
 pub fn get_legal_moves(fen: &str, source: &str, piece: &str, side: Side) -> Vec<String> {
