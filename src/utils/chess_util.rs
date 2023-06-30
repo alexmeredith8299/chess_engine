@@ -1,43 +1,11 @@
 use wasm_bindgen::prelude::*;
 use std::convert::TryInto;
 use super::super::board::bitboard::Bitboard;
-
-#[wasm_bindgen]
-#[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Outcome {
-    WhiteWon = 0,
-    Draw = 1,
-    BlackWon = 2
-}
-
-#[wasm_bindgen]
-#[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Side {
-    White = 0,
-    Black = 1
-}
-
-#[wasm_bindgen]
-#[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PieceType {
-    Pawn = 0,
-    Knight = 1,
-    Bishop = 2,
-    Rook = 3,
-    Queen = 4,
-    King = 5
-}
-
-#[wasm_bindgen]
-pub struct Piece {
-    piece_type: PieceType,
-    side: Side,
-    rank: u8, //TODO: restrict to 1...8
-    file: u8 
-}
+use super::super::board::bitboard;
+use super::super::utils::chess_struct::Outcome;
+use super::super::utils::chess_struct::Side;
+use super::super::utils::chess_struct::PieceType;
+use super::super::utils::chess_struct::Piece;
 
 fn parse_piece(source: &str, piece: &str) -> Piece {
     let side_str = piece.chars().nth(0).unwrap();
@@ -88,8 +56,11 @@ pub fn get_legal_moves(fen: &str, source: &str, piece: &str, side: Side) -> Vec<
     if piece.is_empty() {
         return Vec::new();
     }
-    let moves = Vec::from(["e4".to_string(), "e5".to_string()]);
+    let moves = Vec::from(["e3".to_string(), "e5".to_string()]);
     let piece_rs = parse_piece(source, piece);
+    let allies = bitboard::parse_from_side(fen, side);
+    let pieces = bitboard::parse_all_pieces(fen);
+    let enemies = Bitboard{bitboard: pieces.bitboard ^ allies.bitboard};
     return moves;
 }
 

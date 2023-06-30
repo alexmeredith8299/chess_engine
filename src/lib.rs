@@ -1,11 +1,11 @@
-mod utils;
-mod board;
+pub mod utils;
+pub mod board;
 
 use wasm_bindgen::prelude::*;
 use std::fmt;
 use js_sys::Array;
-use crate::utils::chess_util::Side;
-use crate::utils::chess_util::Outcome;
+use crate::utils::chess_struct::Side;
+use crate::utils::chess_struct::Outcome;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
