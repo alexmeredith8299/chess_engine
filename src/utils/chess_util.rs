@@ -42,15 +42,43 @@ fn parse_square(source: &str) -> (u8, u8) {
     return (file_index.try_into().unwrap(), rank_index.try_into().unwrap());
 }
 
-pub fn get_all_moves_knight(rank: u8, file: u8) -> Vec<String> {
+pub fn get_all_moves_knight(rank: u8, file: u8, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
     let knight_d4: u64 = u64::from_str_radix(constants::knight_d4_bitstr, 2).unwrap();
-    return bitboard::to_squares(Bitboard{bitboard:knight_d4});
-    //return Vec::from(["e1".to_string(), "e5".to_string()])
+    let x_shift: i8 = (file as i8-3).try_into().unwrap();
+    let y_shift: i8 = (rank as i8-3).try_into().unwrap();
+    let knight_moves = bitboard::shift(Bitboard{bitboard:knight_d4}, x_shift, y_shift);
+    let knight_moves_no_allies = Bitboard{bitboard: knight_moves.bitboard & !allies.bitboard};
+    return bitboard::to_squares(knight_moves_no_allies);
 }
+
+pub fn get_all_moves_pawn(rank: u8, file: u8, side: Side, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
+    let pawn_pos: Bitboard = bitboard::parse_from_square(rank, file);
+    let forward: i8;
+    let advance_two_rank: u64;
+    let occupied: u64 = allies.bitboard | enemies.bitboard;
+    match side {
+        Side::White => {
+            forward = 1;
+            advance_two_rank = constants::fourth_rank;
+        }
+        Side::Black => {
+            forward = -1;
+            advance_two_rank = constants::fifth_rank;
+        }
+    }
+    //TODO handle en passant
+    let advance_one: u64 = bitboard::shift(pawn_pos, 0, forward).bitboard & !occupied;
+    let advance_two: u64 = if advance_one!=0 {bitboard::shift(pawn_pos, 0, forward*2).bitboard & advance_two_rank & !occupied} else {0};
+    let capture_right: u64 = bitboard::shift(pawn_pos, 1, forward).bitboard & enemies.bitboard;
+    let capture_left: u64 = bitboard::shift(pawn_pos, -1, forward).bitboard & enemies.bitboard;
+    return bitboard::to_squares(Bitboard{bitboard: advance_one | advance_two | capture_right | capture_left});
+}
+
 
 fn get_all_moves(piece: Piece, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
     match piece.piece_type {
-        PieceType::Knight => return get_all_moves_knight(piece.rank, piece.file),
+        PieceType::Knight => return get_all_moves_knight(piece.rank, piece.file, enemies, allies),
+        PieceType::Pawn => return get_all_moves_pawn(piece.rank, piece.file, piece.side, enemies, allies),
         _ => return Vec::from(["e4".to_string(), "e5".to_string()]),
     }
 }
@@ -61,7 +89,7 @@ pub fn get_legal_moves(fen: &str, source: &str, piece: &str, side: Side) -> Vec<
     }
     //let moves = Vec::from(["e3".to_string(), "e5".to_string()]);
     let piece_rs = parse_piece(source, piece);
-    let allies = bitboard::parse_from_side(fen, side);
+    let allies = bitboard::parse_from_side(fen, piece_rs.side);
     let pieces = bitboard::parse_all_pieces(fen);
     let enemies = Bitboard{bitboard: pieces.bitboard ^ allies.bitboard};
     let moves = get_all_moves(piece_rs, enemies, allies);
@@ -83,7 +111,8 @@ pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str) 
 }
 
 pub fn get_engine_move(fen: &str, engine_side: Side) -> String {
-    return "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R".to_string();
+    //return "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R".to_string();
+    return fen.to_string();
 }
 
 

@@ -2,8 +2,14 @@ use super::super::utils::chess_struct::Side;
 use super::super::utils::chess_struct::PieceType;
 use super::super::board::constants;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Bitboard {
     pub bitboard: u64
+}
+
+pub fn parse_from_square(rank: u8, file: u8) -> Bitboard {
+    let bitboard: u64 = 1 << (rank * 8 + (7-file));
+    return Bitboard{bitboard: bitboard};
 }
 
 pub fn parse_all_pieces(fen: &str) -> Bitboard {
@@ -132,21 +138,30 @@ pub fn shift_down(bitboard: Bitboard) -> Bitboard {
     return Bitboard{bitboard: new_bitboard};
 }
 
+pub fn shift(bitboard: Bitboard, x: i8, y: i8) -> Bitboard {
+    let mut new_bitboard: u64 = bitboard.bitboard;
+    for i in 0..x {
+        new_bitboard = shift_right(Bitboard{bitboard: new_bitboard}).bitboard;
+    }
+    for i in 0..-x {
+        new_bitboard = shift_left(Bitboard{bitboard: new_bitboard}).bitboard;
+    }
+    for i in 0..y {
+        new_bitboard = shift_up(Bitboard{bitboard: new_bitboard}).bitboard;
+    }
+    for i in 0..-y {
+        new_bitboard = shift_down(Bitboard{bitboard: new_bitboard}).bitboard;
+    }
+    return Bitboard{bitboard: new_bitboard};
+}
+
 pub fn to_squares(bitboard: Bitboard) -> Vec<String> {
     let occupied = (0..64).rev().map(|n| (bitboard.bitboard >> n) & 1); //Most to least significant
-                                                                      let square_names = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
-                                                                                          "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
-                                                                                          "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
-                                                                                          "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5",
-                                                                                          "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4",
-                                                                                          "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
-                                                                                          "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
-                                                                                          "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"];
-                                                                      let mut squares: Vec<String> = Vec::new();
-                                                                      let mut i = 0;
+    let mut squares: Vec<String> = Vec::new();
+    let mut i = 0;
     for occ in occupied {
         if occ == 1 {
-            squares.push(square_names[i].to_string());
+            squares.push(constants::square_names[i].to_string());
         }
         i +=1;
     }

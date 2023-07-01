@@ -5,10 +5,12 @@ mod tests {
     use chess_engine::board::bitboard::parse_from_side;
     use chess_engine::board::bitboard::parse_from_piece_type;
     use chess_engine::board::bitboard::parse_all_pieces;
+    use chess_engine::board::bitboard::parse_from_square;
     use chess_engine::board::bitboard::shift_left;
     use chess_engine::board::bitboard::shift_right;
     use chess_engine::board::bitboard::shift_up;
     use chess_engine::board::bitboard::shift_down;
+    use chess_engine::board::bitboard::shift;
     use chess_engine::board::constants;
     use chess_engine::utils::chess_struct::Side;
     use chess_engine::utils::chess_struct::PieceType;
@@ -112,5 +114,21 @@ mod tests {
 
         assert_eq!(shift_down(rooks).bitboard, constants::A7);
         assert_eq!(shift_down(white_pieces).bitboard, 0);
+    }
+
+    #[test]
+    fn test_shift() {
+        let fen = "8/8/8/8/3r4/8/8/8";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        assert_eq!(shift(rooks, 3, 2).bitboard, constants::G6);
+        assert_eq!(shift(rooks, -2, -1).bitboard, constants::B3);
+    }
+
+    #[test]
+    fn test_parse_from_square() {
+        let rank = 0;
+        let file = 0;
+        assert_eq!(parse_from_square(rank, file).bitboard, constants::A1); 
+        assert_eq!(parse_from_square(5, 2).bitboard, constants::C6);
     }
 }
