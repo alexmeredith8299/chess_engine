@@ -1,5 +1,6 @@
 use super::super::utils::chess_struct::Side;
 use super::super::utils::chess_struct::PieceType;
+use super::super::board::constants;
 
 pub struct Bitboard {
     pub bitboard: u64
@@ -109,4 +110,9 @@ pub fn parse_from_piece_type(fen: &str, piece_type: PieceType) -> Bitboard {
     let bitstring: String = bits.iter().collect::<String>();
     let bitboard: u64 = u64::from_str_radix(&bitstring, 2).unwrap();
     return Bitboard{bitboard: bitboard};
+}
+
+pub fn shift_left(bitboard: Bitboard) -> Bitboard {
+    let new_bitboard = (bitboard.bitboard & !constants::A_file) << 1;
+    return Bitboard{bitboard: new_bitboard};
 }

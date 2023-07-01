@@ -5,6 +5,8 @@ mod tests {
     use chess_engine::board::bitboard::parse_from_side;
     use chess_engine::board::bitboard::parse_from_piece_type;
     use chess_engine::board::bitboard::parse_all_pieces;
+    use chess_engine::board::bitboard::shift_left;
+    use chess_engine::board::constants;
     use chess_engine::utils::chess_struct::Side;
     use chess_engine::utils::chess_struct::PieceType;
 
@@ -46,5 +48,36 @@ mod tests {
         let kings = parse_from_piece_type(fen, PieceType::King);
         let all_pieces = parse_all_pieces(fen);
         assert_eq!(all_pieces.bitboard, pawns.bitboard | knights.bitboard | bishops.bitboard | rooks.bitboard | queens.bitboard | kings.bitboard);
+    }
+
+    #[test]
+    fn test_square_constants() {
+        let fen = "r7/8/8/8/4n3/8/8/7p";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let pawns = parse_from_piece_type(fen, PieceType::Pawn);
+        let knights = parse_from_piece_type(fen, PieceType::Knight);
+        assert_eq!(rooks.bitboard, constants::A8);
+        assert_eq!(pawns.bitboard, constants::H1);
+        assert_eq!(knights.bitboard, constants::E4);
+    }
+
+    #[test]
+    fn test_rank_file_constants() {
+        let fen = "r7/r7/r7/r7/r7/r7/r7/RPPPPPPP";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let white_pieces = parse_from_side(fen, Side::White);
+
+        assert_eq!(rooks.bitboard, constants::A_file);
+        assert_eq!(white_pieces.bitboard, constants::first_rank);
+    }
+
+    #[test]
+    fn test_shift_left() {
+        let fen = "r7/r7/r7/r7/r7/r7/r7/RPPPPPPP";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let white_pieces = parse_from_side(fen, Side::White);
+
+        assert_eq!(shift_left(rooks).bitboard, 0);
+        assert_eq!(shift_left(white_pieces).bitboard, 254);
     }
 }
