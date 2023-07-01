@@ -31,6 +31,7 @@ pub enum PieceType {
 }
 
 #[wasm_bindgen]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Piece {
     pub piece_type: PieceType,
     pub side: Side,

@@ -17,5 +17,24 @@ mod tests {
         assert_eq!(expected_knight_moves.sort(), knight_moves.sort());
     }
 
-    
+   #[test]
+   fn test_add_piece_to_fen() {
+        let fen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
+        let target = "a5";
+        let piece = "wP";
+        let new_fen = chess_util::add_piece_to_fen(fen, target, piece);
+        let expected_fen = "r1bqkbnr/pppp1ppp/2n5/PB2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
+        assert_eq!(expected_fen, new_fen);
+   }
+
+   #[test]
+   fn test_remove_piece_from_fen() {
+        let fen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
+        let target = "h1";
+        let piece = "wP";
+        let new_fen = chess_util::remove_piece_from_fen(fen, target, piece);
+        let expected_fen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK3";
+        assert_eq!(expected_fen, new_fen);
+   }
+
 }

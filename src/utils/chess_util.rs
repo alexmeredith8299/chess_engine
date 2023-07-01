@@ -106,9 +106,125 @@ pub fn check_if_legal(fen: &str, source: &str, target: &str, piece: &str, side: 
     return true
 }
 
+pub fn get_fen_for_piece(piece: Piece) -> char {
+    let piece_chars: [char; 2];
+    match piece.piece_type {
+        PieceType::Pawn => {
+            piece_chars = ['p', 'P'];
+        }
+        PieceType::Knight => {
+            piece_chars = ['n', 'N'];
+        }
+        PieceType::Bishop => {
+            piece_chars = ['b', 'B'];
+        }
+        PieceType::Rook => {
+            piece_chars = ['r', 'R'];
+        }
+        PieceType::Queen => {
+            piece_chars = ['q', 'Q'];
+        }
+        PieceType::King => {
+            piece_chars = ['k', 'K'];
+        }
+    }
+    match piece.side {
+        Side::White => {
+            return piece_chars[1];
+        }
+        Side::Black => {
+            return piece_chars[0];
+        }
+        _ => {
+            panic!("Couldn't parse side");
+        }
+    }
+}
+
+pub fn fen_from_rank(rank: Vec<char>) -> String {
+    let mut final_fen_chars: Vec<char> = Vec::new();
+    let mut space_counter: u32 = 0;
+    for fen_char in rank {
+        if fen_char == 'X' {
+            space_counter += 1;
+        }
+        else {
+            if space_counter > 0 {
+                final_fen_chars.push(char::from_digit(space_counter, 10).unwrap());
+                space_counter = 0;
+            }
+            final_fen_chars.push(fen_char);
+        }
+    }
+    if space_counter > 0 {
+        final_fen_chars.push(char::from_digit(space_counter, 10).unwrap());
+        space_counter = 0;
+    }
+    let fen_rank: String = final_fen_chars.iter().collect();
+    return fen_rank;
+}
+
+pub fn rank_from_fen(fen_rank: &str) -> Vec<char> {
+    let mut fen_rank_pieces: Vec<char> = Vec::new();
+    for fen_char in fen_rank.chars() {
+       if fen_char.is_digit(10) {
+           let c_digit: u32 = fen_char.to_digit(10).unwrap();
+           for i in 0..c_digit {
+               fen_rank_pieces.push('X');
+           }
+       }
+       else {
+           fen_rank_pieces.push(fen_char);
+       }
+    }
+    return fen_rank_pieces;
+}
+
+pub fn add_piece_to_fen(fen: &str, target: &str, piece: &str) -> String {
+    //Get rank to update as vec of chars (X for empty)
+    let piece_rs = parse_piece(target, piece);
+    let mut fen_ranks: Vec<&str> = fen.split('/').collect();
+    let fen_rank_to_change = fen_ranks[7-piece_rs.rank as usize];
+    let mut fen_rank_pieces: Vec<char> = rank_from_fen(fen_rank_to_change);
+    
+    //Add piece in the correct spot
+    fen_rank_pieces.remove(piece_rs.file as usize);
+    let piece_char = get_fen_for_piece(piece_rs);
+    fen_rank_pieces.insert(piece_rs.file as usize, piece_char);
+
+    //Convert back to fen-formatted string and insert into fen
+    let fen_rank = fen_from_rank(fen_rank_pieces);
+    fen_ranks.remove(7-piece_rs.rank as usize);
+    fen_ranks.insert(7-piece_rs.rank as usize, &fen_rank);
+    let final_fen_ranks = fen_ranks.join("/");
+    return final_fen_ranks;
+}
+
+pub fn remove_piece_from_fen(fen: &str, source: &str, piece: &str) -> String {
+    //Get rank to update as vec of chars (X for empty)
+    let piece_rs = parse_piece(source, piece);
+    let mut fen_ranks: Vec<&str> = fen.split('/').collect();
+    let fen_rank_to_change = fen_ranks[7-piece_rs.rank as usize];
+    let mut fen_rank_pieces: Vec<char> = rank_from_fen(fen_rank_to_change);
+    
+    //Remove piece and add X for empty 
+    fen_rank_pieces.remove(piece_rs.file as usize);
+    fen_rank_pieces.insert(piece_rs.file as usize, 'X');
+
+    //Convert back to fen-formatted string and insert into fen
+    let fen_rank = fen_from_rank(fen_rank_pieces);
+    fen_ranks.remove(7-piece_rs.rank as usize);
+    fen_ranks.insert(7-piece_rs.rank as usize, &fen_rank);
+    let final_fen_ranks = fen_ranks.join("/");
+    return final_fen_ranks;
+}
+
 pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str) -> String {
 
-    return "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R".to_string();
+    let removed_fen = remove_piece_from_fen(old_fen, source, piece);
+    let final_fen = add_piece_to_fen(&removed_fen, target, piece);
+    //return "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R".to_string();
+    return final_fen;
 }
 
 pub fn get_engine_move(fen: &str, engine_side: Side) -> String {
