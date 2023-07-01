@@ -35,6 +35,11 @@ impl ChessGame {
     }
 
     pub fn check_if_legal(&self, old_fen: &str, source: &str, target: &str, piece: &str) -> bool {
+        //Snap piece back if it's not on the board
+        if target.eq("offboard") {
+            return false;
+        }
+        //Otherwise check if it's a legal move
         return utils::chess_util::check_if_legal(old_fen, source, target, piece, self.player_side); 
     }
 

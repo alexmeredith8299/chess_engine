@@ -34,7 +34,8 @@ function onDrop (source, target, piece, newPos, oldPos, orientation) {
   var old_fen = Chessboard.objToFen(oldPos)
   if (game.check_if_legal(old_fen, source, target, piece)) {
      var new_fen = game.update(old_fen, source, target, piece)
-     board.position(new_fen) 
+     board.position(new_fen, false) 
+     //board.position(new_fen) 
      window.setTimeout(makeEngineMove, 1000)
   } else {
      return 'snapback'

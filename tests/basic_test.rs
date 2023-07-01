@@ -11,4 +11,5 @@ mod tests {
         let mut game = ChessGame::new();
         assert_eq!(true, true);
     }
+
 }
