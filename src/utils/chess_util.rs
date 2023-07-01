@@ -107,6 +107,7 @@ pub fn check_if_legal(fen: &str, source: &str, target: &str, piece: &str, side: 
 }
 
 pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str) -> String {
+
     return "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R".to_string();
 }
 
