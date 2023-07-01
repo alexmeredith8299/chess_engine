@@ -80,3 +80,12 @@ pub const fifth_rank: u64 = A5 ^ B5 ^ C5 ^ D5 ^ E5 ^ F5 ^ G5 ^ H5;
 pub const sixth_rank: u64 = A6 ^ B6 ^ C6 ^ D6 ^ E6 ^ F6 ^ G6 ^ H6;
 pub const seventh_rank: u64 = A7 ^ B7 ^ C7 ^ D7 ^ E7 ^ F7 ^ G7 ^ H7;
 pub const eighth_rank: u64 = A8 ^ B8 ^ C8 ^ D8 ^ E8 ^ F8 ^ G8 ^ H8;
+
+pub const knight_d4_bitstr: &str = "00000000\
+                                    00000000\
+                                    00101000\
+                                    01000100\
+                                    00000000\
+                                    01000100\
+                                    00101000\
+                                    00000000";

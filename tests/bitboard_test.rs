@@ -6,6 +6,9 @@ mod tests {
     use chess_engine::board::bitboard::parse_from_piece_type;
     use chess_engine::board::bitboard::parse_all_pieces;
     use chess_engine::board::bitboard::shift_left;
+    use chess_engine::board::bitboard::shift_right;
+    use chess_engine::board::bitboard::shift_up;
+    use chess_engine::board::bitboard::shift_down;
     use chess_engine::board::constants;
     use chess_engine::utils::chess_struct::Side;
     use chess_engine::utils::chess_struct::PieceType;
@@ -79,5 +82,35 @@ mod tests {
 
         assert_eq!(shift_left(rooks).bitboard, 0);
         assert_eq!(shift_left(white_pieces).bitboard, 254);
+    }
+
+    #[test]
+    fn test_shift_right() {
+        let fen = "7r/7r/7r/7r/7r/7r/7r/RPPPPPPP";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let white_pieces = parse_from_side(fen, Side::White);
+
+        assert_eq!(shift_right(rooks).bitboard, 64);
+        assert_eq!(shift_right(white_pieces).bitboard, 127);
+    }
+    
+    #[test]
+    fn test_shift_up() {
+        let fen = "r7/8/8/8/8/8/8/RPPPPPPP";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let white_pieces = parse_from_side(fen, Side::White);
+
+        assert_eq!(shift_up(rooks).bitboard, 32768);
+        assert_eq!(shift_up(white_pieces).bitboard, 65280);
+    }
+
+    #[test]
+    fn test_shift_down() {
+        let fen = "r7/8/8/8/8/8/8/RPPPPPPP";
+        let rooks = parse_from_piece_type(fen, PieceType::Rook);
+        let white_pieces = parse_from_side(fen, Side::White);
+
+        assert_eq!(shift_down(rooks).bitboard, constants::A7);
+        assert_eq!(shift_down(white_pieces).bitboard, 0);
     }
 }
