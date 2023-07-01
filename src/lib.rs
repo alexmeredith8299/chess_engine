@@ -43,6 +43,11 @@ impl ChessGame {
         return utils::chess_util::check_if_legal(old_fen, source, target, piece, self.player_side); 
     }
 
+    pub fn check_if_promotion(&self, old_fen: &str, source: &str, target: &str, piece: &str) -> bool {
+        return false;
+    }
+
+
     pub fn update(&mut self, old_fen: &str, source: &str, target: &str, piece: &str) -> String {
         let fen = utils::chess_util::get_fen_for_move(old_fen, source, target, piece);
         self.current_position = fen.clone();
