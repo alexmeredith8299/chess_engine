@@ -296,7 +296,7 @@ pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str, 
             //Check if pawn captured en passant
             let piece_rs = parse_piece(target, piece);
             let target_square = bitboard::parse_from_square(piece_rs.rank, piece_rs.file);
-            if target_square.bitboard == ep_square {
+            if target_square.bitboard == ep_square && piece_rs.piece_type == PieceType::Pawn{
                 //Remove captured pawn
                 let captured_square: u64;
                 match piece_rs.side {
