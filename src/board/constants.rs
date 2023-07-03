@@ -90,6 +90,15 @@ pub const knight_d4_bitstr: &str = "00000000\
                                     00101000\
                                     00000000";
 
+pub const king_d4_bitstr: &str = "00000000\
+                                  00000000\
+                                  00000000\
+                                  00111000\
+                                  00101000\
+                                  00111000\
+                                  00000000\
+                                  00000000";
+
 //Most significant first
 pub const squares: [u64; 64] = [
     A8, B8, C8, D8, E8, F8, G8, H8, A7, B7, C7, D7, E7, F7, G7, H7, A6, B6, C6, D6, E6, F6, G6,
