@@ -2,14 +2,10 @@ use super::super::utils::chess_struct::Side;
 use super::super::utils::chess_struct::PieceType;
 use super::super::board::constants;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Bitboard {
-    pub bitboard: u64
-}
+pub type Bitboard = u64;
 
 pub fn parse_from_square(rank: u8, file: u8) -> Bitboard {
-    let bitboard: u64 = 1 << (rank * 8 + (7-file));
-    return Bitboard{bitboard: bitboard};
+    return 1 << (rank * 8 + (7-file));
 }
 
 pub fn parse_all_pieces(fen: &str) -> Bitboard {
@@ -30,8 +26,7 @@ pub fn parse_all_pieces(fen: &str) -> Bitboard {
         }
     }
     let bitstring: String = bits.iter().collect::<String>();
-    let bitboard: u64 = u64::from_str_radix(&bitstring, 2).unwrap();
-    return Bitboard{bitboard: bitboard};
+    return u64::from_str_radix(&bitstring, 2).unwrap();
 }
 
 pub fn parse_from_side(fen: &str, side: Side) -> Bitboard {
@@ -67,8 +62,7 @@ pub fn parse_from_side(fen: &str, side: Side) -> Bitboard {
         }
     }
     let bitstring: String = bits.iter().collect::<String>();
-    let bitboard: u64 = u64::from_str_radix(&bitstring, 2).unwrap();
-    return Bitboard{bitboard: bitboard};
+    return u64::from_str_radix(&bitstring, 2).unwrap();
 }
 
 pub fn parse_from_piece_type(fen: &str, piece_type: PieceType) -> Bitboard {
@@ -114,49 +108,44 @@ pub fn parse_from_piece_type(fen: &str, piece_type: PieceType) -> Bitboard {
         }
     }
     let bitstring: String = bits.iter().collect::<String>();
-    let bitboard: u64 = u64::from_str_radix(&bitstring, 2).unwrap();
-    return Bitboard{bitboard: bitboard};
+    return u64::from_str_radix(&bitstring, 2).unwrap();
 }
 
 pub fn shift_left(bitboard: Bitboard) -> Bitboard {
-    let new_bitboard = (bitboard.bitboard & !constants::A_file) << 1;
-    return Bitboard{bitboard: new_bitboard};
+    return (bitboard & !constants::A_file) << 1;
 }
 
 pub fn shift_right(bitboard: Bitboard) -> Bitboard {
-    let new_bitboard = (bitboard.bitboard & !constants::H_file) >> 1;
-    return Bitboard{bitboard: new_bitboard};
+    return (bitboard & !constants::H_file) >> 1;
 }
 
 pub fn shift_up(bitboard: Bitboard) -> Bitboard {
-    let new_bitboard = (bitboard.bitboard & !constants::eighth_rank) << 8;
-    return Bitboard{bitboard: new_bitboard};
+    return (bitboard & !constants::eighth_rank) << 8;
 }
 
 pub fn shift_down(bitboard: Bitboard) -> Bitboard {
-    let new_bitboard = (bitboard.bitboard & !constants::first_rank) >> 8;
-    return Bitboard{bitboard: new_bitboard};
+    return (bitboard & !constants::first_rank) >> 8;
 }
 
 pub fn shift(bitboard: Bitboard, x: i8, y: i8) -> Bitboard {
-    let mut new_bitboard: u64 = bitboard.bitboard;
+    let mut new_bitboard: u64 = bitboard;//bitboard.bitboard;
     for i in 0..x {
-        new_bitboard = shift_right(Bitboard{bitboard: new_bitboard}).bitboard;
+        new_bitboard = shift_right(new_bitboard);
     }
     for i in 0..-x {
-        new_bitboard = shift_left(Bitboard{bitboard: new_bitboard}).bitboard;
+        new_bitboard = shift_left(new_bitboard);
     }
     for i in 0..y {
-        new_bitboard = shift_up(Bitboard{bitboard: new_bitboard}).bitboard;
+        new_bitboard = shift_up(new_bitboard);
     }
     for i in 0..-y {
-        new_bitboard = shift_down(Bitboard{bitboard: new_bitboard}).bitboard;
+        new_bitboard = shift_down(new_bitboard);
     }
-    return Bitboard{bitboard: new_bitboard};
+    return new_bitboard;
 }
 
 pub fn to_squares(bitboard: Bitboard) -> Vec<String> {
-    let occupied = (0..64).rev().map(|n| (bitboard.bitboard >> n) & 1); //Most to least significant
+    let occupied = (0..64).rev().map(|n| (bitboard >> n) & 1); //Most to least significant
     let mut squares: Vec<String> = Vec::new();
     let mut i = 0;
     for occ in occupied {

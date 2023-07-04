@@ -18,7 +18,6 @@ mod tests {
     #[test]
     fn init_board() {
         let bitboard: u64 = 0;
-        let board = Bitboard{bitboard: bitboard};
         assert_eq!(true, true);
     }
 
@@ -28,7 +27,7 @@ mod tests {
         let side = Side::Black;
         let fen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
         let board = parse_from_side(fen, side);
-        assert_eq!(board.bitboard, bitboard);
+        assert_eq!(board, bitboard);
     }
 
     #[test]
@@ -38,8 +37,8 @@ mod tests {
         let black_pieces = parse_from_side(fen, side);
         let white_pieces = parse_from_side(fen, Side::White);
         let all_pieces = parse_all_pieces(fen);
-        assert_eq!(all_pieces.bitboard, black_pieces.bitboard | white_pieces.bitboard);
-        assert_eq!(all_pieces.bitboard ^ black_pieces.bitboard, white_pieces.bitboard);
+        assert_eq!(all_pieces, black_pieces | white_pieces);
+        assert_eq!(all_pieces ^ black_pieces, white_pieces);
     }
 
     #[test]
@@ -52,7 +51,7 @@ mod tests {
         let queens = parse_from_piece_type(fen, PieceType::Queen);
         let kings = parse_from_piece_type(fen, PieceType::King);
         let all_pieces = parse_all_pieces(fen);
-        assert_eq!(all_pieces.bitboard, pawns.bitboard | knights.bitboard | bishops.bitboard | rooks.bitboard | queens.bitboard | kings.bitboard);
+        assert_eq!(all_pieces, pawns | knights | bishops | rooks | queens | kings);
     }
 
     #[test]
@@ -61,9 +60,9 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let pawns = parse_from_piece_type(fen, PieceType::Pawn);
         let knights = parse_from_piece_type(fen, PieceType::Knight);
-        assert_eq!(rooks.bitboard, constants::A8);
-        assert_eq!(pawns.bitboard, constants::H1);
-        assert_eq!(knights.bitboard, constants::E4);
+        assert_eq!(rooks, constants::A8);
+        assert_eq!(pawns, constants::H1);
+        assert_eq!(knights, constants::E4);
     }
 
     #[test]
@@ -72,8 +71,8 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let white_pieces = parse_from_side(fen, Side::White);
 
-        assert_eq!(rooks.bitboard, constants::A_file);
-        assert_eq!(white_pieces.bitboard, constants::first_rank);
+        assert_eq!(rooks, constants::A_file);
+        assert_eq!(white_pieces, constants::first_rank);
     }
 
     #[test]
@@ -82,8 +81,8 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let white_pieces = parse_from_side(fen, Side::White);
 
-        assert_eq!(shift_left(rooks).bitboard, 0);
-        assert_eq!(shift_left(white_pieces).bitboard, 254);
+        assert_eq!(shift_left(rooks), 0);
+        assert_eq!(shift_left(white_pieces), 254);
     }
 
     #[test]
@@ -92,8 +91,8 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let white_pieces = parse_from_side(fen, Side::White);
 
-        assert_eq!(shift_right(rooks).bitboard, 64);
-        assert_eq!(shift_right(white_pieces).bitboard, 127);
+        assert_eq!(shift_right(rooks), 64);
+        assert_eq!(shift_right(white_pieces), 127);
     }
     
     #[test]
@@ -102,8 +101,8 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let white_pieces = parse_from_side(fen, Side::White);
 
-        assert_eq!(shift_up(rooks).bitboard, 32768);
-        assert_eq!(shift_up(white_pieces).bitboard, 65280);
+        assert_eq!(shift_up(rooks), 32768);
+        assert_eq!(shift_up(white_pieces), 65280);
     }
 
     #[test]
@@ -112,23 +111,23 @@ mod tests {
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
         let white_pieces = parse_from_side(fen, Side::White);
 
-        assert_eq!(shift_down(rooks).bitboard, constants::A7);
-        assert_eq!(shift_down(white_pieces).bitboard, 0);
+        assert_eq!(shift_down(rooks), constants::A7);
+        assert_eq!(shift_down(white_pieces), 0);
     }
 
     #[test]
     fn test_shift() {
         let fen = "8/8/8/8/3r4/8/8/8";
         let rooks = parse_from_piece_type(fen, PieceType::Rook);
-        assert_eq!(shift(rooks, 3, 2).bitboard, constants::G6);
-        assert_eq!(shift(rooks, -2, -1).bitboard, constants::B3);
+        assert_eq!(shift(rooks, 3, 2), constants::G6);
+        assert_eq!(shift(rooks, -2, -1), constants::B3);
     }
 
     #[test]
     fn test_parse_from_square() {
         let rank = 0;
         let file = 0;
-        assert_eq!(parse_from_square(rank, file).bitboard, constants::A1); 
-        assert_eq!(parse_from_square(5, 2).bitboard, constants::C6);
+        assert_eq!(parse_from_square(rank, file), constants::A1); 
+        assert_eq!(parse_from_square(5, 2), constants::C6);
     }
 }

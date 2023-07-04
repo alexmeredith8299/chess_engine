@@ -11,9 +11,9 @@ mod tests {
         //G1
         let rank = 0;
         let file = 6;
-        let enemies = Bitboard{bitboard:0};
+        let enemies = 0;
         //E2 is occupied with an ally (as in starting position)
-        let allies = Bitboard{bitboard:2048};
+        let allies = 2048;
         let mut knight_moves = chess_util::get_all_moves_knight(rank, file, enemies, allies);
         let mut expected_knight_moves = Vec::from(["h3".to_string(), "f3".to_string()]);
         knight_moves.sort();
@@ -35,8 +35,8 @@ mod tests {
        //G5
        let rank = 4;
        let file = 6;
-       let enemies = Bitboard{bitboard:constants::F5};
-       let allies = Bitboard{bitboard:0};
+       let enemies = constants::F5;
+       let allies = 0;
        let en_passant_square = Some(constants::F6);
        let mut pawn_moves = chess_util::get_all_moves_pawn(rank, file, Side::White, enemies, allies, en_passant_square);
        let mut expected_pawn_moves = Vec::from(["g6".to_string(), "f6".to_string()]);

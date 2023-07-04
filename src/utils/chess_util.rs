@@ -46,8 +46,8 @@ pub fn get_all_moves_knight(rank: u8, file: u8, enemies: Bitboard, allies: Bitbo
     let knight_d4: u64 = u64::from_str_radix(constants::knight_d4_bitstr, 2).unwrap();
     let x_shift: i8 = (file as i8-3).try_into().unwrap();
     let y_shift: i8 = (rank as i8-3).try_into().unwrap();
-    let knight_moves = bitboard::shift(Bitboard{bitboard:knight_d4}, x_shift, y_shift);
-    let knight_moves_no_allies = Bitboard{bitboard: knight_moves.bitboard & !allies.bitboard};
+    let knight_moves = bitboard::shift(knight_d4, x_shift, y_shift);
+    let knight_moves_no_allies = knight_moves & !allies;
     return bitboard::to_squares(knight_moves_no_allies);
 }
 
@@ -55,7 +55,7 @@ pub fn get_all_moves_pawn(rank: u8, file: u8, side: Side, enemies: Bitboard, all
     let pawn_pos: Bitboard = bitboard::parse_from_square(rank, file);
     let forward: i8;
     let advance_two_rank: u64;
-    let occupied: u64 = allies.bitboard | enemies.bitboard;
+    let occupied: u64 = allies | enemies;
     match side {
         Side::White => {
             forward = 1;
@@ -68,19 +68,18 @@ pub fn get_all_moves_pawn(rank: u8, file: u8, side: Side, enemies: Bitboard, all
     }
     let en_passant: u64;
     match en_passant_square {
-        Some(ep_square) => { //En passant is possible if the EP square is diagonal left or right of
-                             //the current pawn position
-            en_passant = (bitboard::shift(pawn_pos, -1, forward).bitboard | bitboard::shift(pawn_pos, 1, forward).bitboard) & ep_square;
+        Some(ep_square) => { //En passant is possible if the EP square is diagonal left or right of the current pawn position
+            en_passant = (bitboard::shift(pawn_pos, -1, forward)| bitboard::shift(pawn_pos, 1, forward)) & ep_square;
         },
         None => { //En passant is not possible
             en_passant = 0;
         }
     }
-    let advance_one: u64 = bitboard::shift(pawn_pos, 0, forward).bitboard & !occupied;
-    let advance_two: u64 = if advance_one!=0 {bitboard::shift(pawn_pos, 0, forward*2).bitboard & advance_two_rank & !occupied} else {0};
-    let capture_right: u64 = bitboard::shift(pawn_pos, 1, forward).bitboard & enemies.bitboard;
-    let capture_left: u64 = bitboard::shift(pawn_pos, -1, forward).bitboard & enemies.bitboard;
-    return bitboard::to_squares(Bitboard{bitboard: advance_one | advance_two | capture_right | capture_left | en_passant});
+    let advance_one: u64 = bitboard::shift(pawn_pos, 0, forward) & !occupied;
+    let advance_two: u64 = if advance_one!=0 {bitboard::shift(pawn_pos, 0, forward*2) & advance_two_rank & !occupied} else {0};
+    let capture_right: u64 = bitboard::shift(pawn_pos, 1, forward) & enemies;
+    let capture_left: u64 = bitboard::shift(pawn_pos, -1, forward) & enemies;
+    return bitboard::to_squares(advance_one | advance_two | capture_right | capture_left | en_passant);
 }
 
 pub fn get_all_moves_king(rank: u8, file: u8, side: Side, enemies: Bitboard, allies: Bitboard, king_castle: bool, queen_castle: bool) -> Vec<String> {
@@ -88,8 +87,8 @@ pub fn get_all_moves_king(rank: u8, file: u8, side: Side, enemies: Bitboard, all
     let king_d4: u64 = u64::from_str_radix(constants::king_d4_bitstr, 2).unwrap();
     let x_shift: i8 = (file as i8-3).try_into().unwrap();
     let y_shift: i8 = (rank as i8-3).try_into().unwrap();
-    let king_moves = bitboard::shift(Bitboard{bitboard:king_d4}, x_shift, y_shift);
-    let king_moves_no_allies = Bitboard{bitboard: king_moves.bitboard & !allies.bitboard};
+    let king_moves = bitboard::shift(king_d4, x_shift, y_shift);
+    let king_moves_no_allies = king_moves & !allies;
     return bitboard::to_squares(king_moves_no_allies);
 
 }
@@ -107,11 +106,10 @@ pub fn get_legal_moves(fen: &str, source: &str, piece: &str, side: Side, white_k
     if piece.is_empty() {
         return Vec::new();
     }
-    //let moves = Vec::from(["e3".to_string(), "e5".to_string()]);
     let piece_rs = parse_piece(source, piece);
     let allies = bitboard::parse_from_side(fen, piece_rs.side);
     let pieces = bitboard::parse_all_pieces(fen);
-    let enemies = Bitboard{bitboard: pieces.bitboard ^ allies.bitboard};
+    let enemies = pieces ^ allies;
     let king_castle: bool;
     let queen_castle: bool;
     match side {
@@ -145,15 +143,15 @@ pub fn check_castling(old_fen: &str, fen:&str) -> (bool, bool, bool, bool) {
 pub fn get_en_passant_square(old_fen: &str, fen:&str) -> Option<u64> {
     let old_pawn_bitboard = bitboard::parse_from_piece_type(old_fen, PieceType::Pawn);
     let new_pawn_bitboard = bitboard::parse_from_piece_type(fen, PieceType::Pawn);
-    let pawn_diff = old_pawn_bitboard.bitboard ^ new_pawn_bitboard.bitboard;
+    let pawn_diff = old_pawn_bitboard ^ new_pawn_bitboard;
     if (pawn_diff & constants::fourth_rank) != 0 && (pawn_diff & constants::second_rank) != 0 {
         //Last move was 2-square pawn advance from 2nd rank
-        let ep_bitboard = bitboard::shift_down(Bitboard{bitboard:pawn_diff & constants::fourth_rank}).bitboard;
+        let ep_bitboard = bitboard::shift_down(pawn_diff & constants::fourth_rank);
         return Some(ep_bitboard);
     }
     if (pawn_diff & constants::seventh_rank) != 0 && (pawn_diff & constants::fifth_rank) != 0 {
         //Last move was 2-square pawn advance from 7th rank
-        let ep_bitboard = bitboard::shift_up(Bitboard{bitboard:pawn_diff & constants::fifth_rank}).bitboard;
+        let ep_bitboard = bitboard::shift_up(pawn_diff & constants::fifth_rank);
         return Some(ep_bitboard);
     }
     return None
@@ -296,15 +294,15 @@ pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str, 
             //Check if pawn captured en passant
             let piece_rs = parse_piece(target, piece);
             let target_square = bitboard::parse_from_square(piece_rs.rank, piece_rs.file);
-            if target_square.bitboard == ep_square && piece_rs.piece_type == PieceType::Pawn{
+            if target_square == ep_square && piece_rs.piece_type == PieceType::Pawn{
                 //Remove captured pawn
                 let captured_square: u64;
                 match piece_rs.side {
                     Side::White => {
-                        captured_square = bitboard::shift_down(target_square).bitboard;
+                        captured_square = bitboard::shift_down(target_square);
                     },
                     Side::Black => {
-                        captured_square = bitboard::shift_up(target_square).bitboard;
+                        captured_square = bitboard::shift_up(target_square);
                     }
                 }
                 let mut captured_square_name: &str = "-1";
