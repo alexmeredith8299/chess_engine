@@ -42,6 +42,13 @@ fn parse_square(source: &str) -> (u8, u8) {
     return (file_index.try_into().unwrap(), rank_index.try_into().unwrap());
 }
 
+pub fn get_all_moves_bishop(rank: u8, file: u8, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
+    let max_diag = std::cmp::min(7-file as i8, 7-rank as i8);
+    let min_diag = std::cmp::min(file as i8, rank as i8);
+    let bishop_moves: u64 = 0;
+    return Vec::from(["e4".to_string(), "e5".to_string()]);
+}
+
 pub fn get_all_moves_knight(rank: u8, file: u8, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
     let knight_d4: u64 = u64::from_str_radix(constants::knight_d4_bitstr, 2).unwrap();
     let x_shift: i8 = (file as i8-3).try_into().unwrap();
@@ -287,7 +294,6 @@ pub fn remove_piece_from_fen(fen: &str, source: &str, piece: &str) -> String {
 pub fn get_fen_for_move(old_fen: &str, source: &str, target: &str, piece: &str, en_passant_square: Option<u64>) -> String {
     let removed_fen = remove_piece_from_fen(old_fen, source, piece);
     let final_fen = add_piece_to_fen(&removed_fen, target, piece);
-
     //Handle en passant (captured pawn is on different square so isn't automatically removed)
     match en_passant_square {
         Some(ep_square) => {
