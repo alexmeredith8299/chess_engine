@@ -8,6 +8,15 @@ pub fn parse_from_square(rank: u8, file: u8) -> Bitboard {
     return 1 << (rank * 8 + (7-file));
 }
 
+pub fn get_rank(rank: u8) -> Bitboard {
+    return constants::ranks[rank as usize];
+}
+
+pub fn get_file(file: u8) -> Bitboard {
+    return constants::files[file as usize];
+}
+
+
 pub fn parse_all_pieces(fen: &str) -> Bitboard {
     //Returns Bitboard where all squares occupied by any piece are 1's
     let chars = fen.chars();

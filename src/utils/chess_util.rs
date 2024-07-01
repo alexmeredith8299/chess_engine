@@ -97,14 +97,22 @@ pub fn get_all_moves_king(rank: u8, file: u8, side: Side, enemies: Bitboard, all
     let king_moves = bitboard::shift(king_d4, x_shift, y_shift);
     let king_moves_no_allies = king_moves & !allies;
     return bitboard::to_squares(king_moves_no_allies);
-
 }
+
+pub fn get_all_moves_rook(rank: u8, file: u8, side: Side, enemies: Bitboard, allies: Bitboard) -> Vec<String> {
+    //TODO handle blocking
+    let rook_rank: u64 = bitboard::get_rank(rank);
+    let rook_file: u64 = bitboard::get_file(file);
+    return bitboard::to_squares(rook_rank | rook_file);
+}
+
 
 fn get_all_moves(piece: Piece, enemies: Bitboard, allies: Bitboard, king_castle: bool, queen_castle: bool, en_passant_square: Option<u64>) -> Vec<String> {
     match piece.piece_type {
         PieceType::Knight => return get_all_moves_knight(piece.rank, piece.file, enemies, allies),
         PieceType::Pawn => return get_all_moves_pawn(piece.rank, piece.file, piece.side, enemies, allies, en_passant_square),
         PieceType::King => return get_all_moves_king(piece.rank, piece.file, piece.side, enemies, allies, king_castle, queen_castle),
+        PieceType::Rook => return get_all_moves_rook(piece.rank, piece.file, piece.side, enemies, allies),
         _ => return Vec::from(["e4".to_string(), "e5".to_string()]),
     }
 }

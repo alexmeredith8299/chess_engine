@@ -99,6 +99,15 @@ pub const king_d4_bitstr: &str = "00000000\
                                   00000000\
                                   00000000";
 
+pub const rook_d4_bitstr: &str = "00010000\
+                                  00010000\
+                                  00010000\
+                                  00010000\
+                                  11101111\
+                                  00010000\
+                                  00010000\
+                                  00010000";
+
 //Most significant first
 pub const squares: [u64; 64] = [
     A8, B8, C8, D8, E8, F8, G8, H8, A7, B7, C7, D7, E7, F7, G7, H7, A6, B6, C6, D6, E6, F6, G6,
@@ -115,3 +124,6 @@ pub const square_names: [&str; 64] = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", 
                                                                                           "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
                                                                                           "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"];
 
+pub const ranks: [u64; 8] = [first_rank, second_rank, third_rank, fourth_rank, fifth_rank, sixth_rank, seventh_rank, eighth_rank];
+
+pub const files: [u64; 8] = [A_file, B_file, C_file, D_file, E_file, F_file, G_file, H_file];
