@@ -1,3 +1,4 @@
+use std::convert::TryInto;
 use super::super::utils::chess_struct::Side;
 use super::super::utils::chess_struct::PieceType;
 use super::super::board::constants;
@@ -164,4 +165,30 @@ pub fn to_squares(bitboard: Bitboard) -> Vec<String> {
         i +=1;
     }
     return squares;
+}
+
+pub fn to_ranks_and_files(bitboard: Bitboard) -> (Vec<u64>, Vec<u64>) {
+    let occupied = (0..64).rev().map(|n| (bitboard >> n) & 1); //Most to least significant
+    let mut ranks: Vec<u64> = Vec::new();
+    let mut files: Vec<u64> = Vec::new();
+    let mut i = 0;
+    for occ in occupied {
+        if occ == 1 {
+            let square = constants::squares[i];
+            ranks.push(square/8);//.try_into().unwrap());
+            files.push(square%8);//.try_into().unwrap());
+        }
+        i +=1;
+    }
+    return (ranks, files);
+}
+
+pub fn get_squares_above(rank: u8) -> Bitboard {
+    let squares: u64 = constants::all_squares;
+    return shift(squares, 0, (rank+1).try_into().unwrap());
+}
+pub fn get_squares_below(rank: u8) -> Bitboard {
+    let squares: u64 = constants::all_squares;
+    let rank_i8: i8 = (rank+1).try_into().unwrap();
+    return shift(squares, 0, -rank_i8);
 }

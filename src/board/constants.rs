@@ -127,3 +127,5 @@ pub const square_names: [&str; 64] = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", 
 pub const ranks: [u64; 8] = [first_rank, second_rank, third_rank, fourth_rank, fifth_rank, sixth_rank, seventh_rank, eighth_rank];
 
 pub const files: [u64; 8] = [A_file, B_file, C_file, D_file, E_file, F_file, G_file, H_file];
+
+pub const all_squares: u64 = A_file ^ B_file ^ C_file ^ D_file ^ E_file ^ F_file ^ G_file ^ H_file;

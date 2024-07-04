@@ -103,7 +103,17 @@ pub fn get_all_moves_rook(rank: u8, file: u8, side: Side, enemies: Bitboard, all
     //TODO handle blocking
     let rook_rank: u64 = bitboard::get_rank(rank);
     let rook_file: u64 = bitboard::get_file(file);
-    return bitboard::to_squares(rook_rank | rook_file);
+    let squares_above = bitboard::get_squares_above(rank);// & (rook_rank | rook_file);
+    let squares_below = bitboard::get_squares_below(rank);
+    let (enemies_below_ranks, enemies_below_files) = bitboard::to_ranks_and_files(enemies & squares_below);
+    /*for i in 0..8 {
+        if enemy_ranks.contains(&i) & (i < rank) {
+            for j in 0..(i-1) {
+                bad_ranks = bad_ranks ^ bitboard::get_rank(j);
+            }
+        }
+    }*/
+    return bitboard::to_squares(squares_above);//bitboard::to_squares(rook_rank | rook_file);
 }
 
 
